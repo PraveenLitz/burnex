@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upgrade Plan - Burnex AI</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Razorpay SDK -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/PNG">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; margin: 0; padding: 40px 20px; color: #1e293b; }
+        .container { max-width: 900px; margin: 0 auto; text-align: center; }
+        
+        h1 { font-size: 2.5rem; margin-bottom: 10px; color: #0f172a; }
+        p.subtitle { color: #64748b; margin-bottom: 40px; font-size: 1.1rem; }
+
+        .pricing-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            padding: 40px;
+            max-width: 400px;
+            margin: 0 auto;
+            border: 2px solid #059669; /* Highlight border */
+            position: relative;
+        }
+
+        .badge {
+            position: absolute;
+            top: -15px; left: 50%; transform: translateX(-50%);
+            background: #059669; color: white;
+            padding: 8px 20px; border-radius: 50px;
+            font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 0.8rem;
+        }
+
+        .price { font-size: 3.5rem; font-weight: 800; color: #0f172a; margin: 20px 0; }
+        .price span { font-size: 1rem; color: #94a3b8; font-weight: 500; }
+
+        ul.features { list-style: none; padding: 0; text-align: left; margin: 30px 0; }
+        ul.features li { margin-bottom: 15px; display: flex; align-items: center; gap: 10px; font-size: 1rem; }
+        ul.features i { color: #059669; background: #d1fae5; padding: 5px; border-radius: 50%; font-size: 0.8rem; }
+
+        .btn-pay {
+            width: 100%; padding: 18px; border-radius: 12px; border: none;
+            background: #059669; color: white; font-weight: 700; font-size: 1.1rem;
+            cursor: pointer; transition: 0.3s;
+        }
+        .btn-pay:hover { background: #047857; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(5,150,105,0.3); }
+        
+        .back-link { display: block; margin-top: 20px; color: #64748b; text-decoration: none; }
+        .back-link:hover { color: #0f172a; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Upgrade Your Health</h1>
+        <p class="subtitle">Unlock the full power of AI nutrition tracking.</p>
+
+        <div class="pricing-card">
+            <div class="badge">Recommended</div>
+            <h2>Premium Plan</h2>
+            <div class="price">₹99<span>/year</span></div>
+            
+            <ul class="features">
+                <li><i class="fas fa-check"></i> Unlimited AI Food Scans</li>
+                <li><i class="fas fa-check"></i> Detailed Macros (Carbs, Protein, Fat)</li>
+                <li><i class="fas fa-check"></i> Personalized AI Diet Plans</li>
+                <li><i class="fas fa-check"></i> Barcode Scanner Access</li>
+                <li><i class="fas fa-check"></i> Export Data to CSV</li>
+            </ul>
+
+            <button id="rzp-button" class="btn-pay">Pay Now & Upgrade</button>
+        </div>
+
+        <a href="/dashboard" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+    </div>
+
+    <script>
+        document.getElementById('rzp-button').onclick = async function(e) {
+            e.preventDefault();
+            const btn = this;
+            const originalText = btn.innerText;
+            btn.innerText = "Processing...";
+            btn.disabled = true;
+
+            try {
+                // 1. Create Order
+                const res = await fetch('/create_order', { method: 'POST' });
+                const data = await res.json();
+                
+                // Catch Server Errors (500 or 400)
+                if (!res.ok) {
+                    throw new Error(data.error || "Failed to create order");
+                }
+
+                // 2. Configure Razorpay
+                const options = {
+                    "key": "{{ rzp_key }}", 
+                    "amount": data.amount,
+                    "currency": "INR",
+                    "name": "Burnex AI",
+                    "description": "Premium Subscription",
+                    "order_id": data.id,
+                    "handler": async function (response) {
+                        const verify = await fetch('/verify_payment', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify(response)
+                        });
+                        const result = await verify.json();
+                        if(result.status === 'success') {
+                            alert("🎉 Payment Successful!");
+                            window.location.href = "/dashboard";
+                        } else {
+                            alert("Payment verification failed.");
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                        }
+                    },
+                    "theme": { "color": "#059669" }
+                };
+
+                const rzp = new Razorpay(options);
+                rzp.on('payment.failed', function(response){
+                    alert("Payment Failed: " + response.error.description);
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                });
+                rzp.open();
+
+            } catch(err) {
+                console.error(err);
+                alert("Error: " + err.message);
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>

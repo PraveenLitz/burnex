@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Burnex AI - The Future of Nutrition Tracking</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/PNG">
+
+
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="container nav-inner">
+            <a href="#" class="logo">
+                <i class="fas fa-leaf"></i> Burnex AI
+            </a>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu">
+                <span></span>
+            </button>
+            
+            <!-- Mobile Menu Overlay -->
+            <div class="mobile-menu-overlay" id="menuOverlay"></div>
+            
+            <div class="nav-links" id="navLinks">
+                <a href="#how-it-works">How it Works</a>
+                <a href="#demo">Try Now</a>
+                <a href="#pricing">Pricing</a>
+                <a href="#reviews">Success Stories</a>
+                <a href="{{ url_for('login') }}" style=" text-decoration: none; background-color: rgb(37, 134, 74); padding: 10px 20px; border-radius: 20px; color: white;">Log In</a>
+                <a href="{{ url_for('register') }}" style="background-color: rgb(37, 134, 74); padding: 10px 20px; border-radius: 20px; color: white;">Sign Up Free</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="container" data-aos="fade-up">
+            <span class="badge">Burnex AI</span>
+            <h1>Transform Your Diet <br><span>with AI-Powered Precision</span></h1>
+            <p>Don't guess your macros. Snap a photo and let our advanced AI calculate calories, protein, and micronutrients instantly.</p>
+            
+            <div style="display:flex; justify-content:center; gap:15px; flex-wrap: wrap;">
+                <a href="#demo" class="analyze-btn" style="text-decoration: none;">Try Live Demo</a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <h3>0.5M+</h3>
+                    <p>Foods Analyzed</p>
+                </div>
+                <div class="stat-item">
+                    <h3>98%</h3>
+                    <p>Accuracy Rate</p>
+                </div>
+                <div class="stat-item">
+                    <h3>5k+</h3>
+                    <p>Active Users</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="steps-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>From Photo to Fitness</h2>
+                <p>NutriScan simplifies tracking. No more searching databases or weighing ingredients manually.</p>
+            </div>
+            
+            <div class="steps-grid">
+                <div class="step-card" data-aos="fade-up" data-aos-delay="100">
+                    
+                    <div class="step-content">
+                        <div class="step-icon"><i class="fas fa-camera"></i></div>
+                        <h3>Upload Photo</h3>
+                        <p>Take a clear photo of your meal. Our AI recognizes complex dishes and mixed ingredients.</p>
+                    </div>
+                </div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="200">
+                    
+                    <div class="step-content">
+                        <div class="step-icon"><i class="fas fa-brain"></i></div>
+                        <h3>AI Analysis</h3>
+                        <p>Our deep learning models estimate portion sizes and retrieve nutritional data instantly.</p>
+                    </div>
+                </div>
+                <div class="step-card" data-aos="fade-up" data-aos-delay="300">
+                    
+                    <div class="step-content">
+                        <div class="step-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3>Track Goals</h3>
+                        <p>Log the data to your daily journal and watch your progress towards your health goals.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section id="demo" class="hero" style="padding-top: 60px; padding-bottom: 100px;">
+        <div class="container">
+            <h1 data-aos="fade-up">Your Personal <br><span>AI Nutritionist</span></h1>
+            <p data-aos="fade-up" data-aos-delay="100">Instantly analyze food photos, track macros, and reach your goals with computer vision.</p>
+            
+            <div class="demo-section" data-aos="fade-up" data-aos-delay="200">
+                <!-- Upload Section -->
+                <div id="uploadSection">
+                    <form id="demoForm">
+                        <input type="file" id="demoFile" accept="image/*" style="display:none" required onchange="showPreview(this)">
+                        <label for="demoFile" class="file-label" id="dropArea">
+                            <i class="fas fa-cloud-upload-alt"></i><br>
+                            <span id="fileText">Tap to Upload Food Image</span>
+                            <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 10px;">
+                                Supports JPG, PNG, WEBP
+                            </div>
+                        </label>
+                        <button type="submit" class="btn btn-primary" style="width:100%; padding: 18px; font-size: 1.1rem;">
+                            <i class="fas fa-magic"></i> Analyze Now
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Loading Animation -->
+                <div id="loadingContainer" class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <div class="loading-text">Analyzing your meal...</div>
+                    <div class="loading-subtext">Our AI is working its magic</div>
+                    
+                    <div class="loading-steps">
+                        <div class="loading-step active">
+                            <div class="step-icon"><i class="fas fa-image"></i></div>
+                            <p>Image Processing</p>
+                        </div>
+                        <div class="loading-step">
+                            <div class="step-icon"><i class="fas fa-brain"></i></div>
+                            <p>AI Analysis</p>
+                        </div>
+                        <div class="loading-step">
+                            <div class="step-icon"><i class="fas fa-calculator"></i></div>
+                            <p>Calculating Nutrients</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Enhanced Results Display -->
+                <div id="resultsContainer" class="results-container">
+                    <div class="results-header">
+                        <h3>Nutrition Analysis Complete!</h3>
+                        <p>Here's the detailed breakdown of your meal</p>
+                    </div>
+
+                    <!-- Macro Nutrients Summary -->
+                    <div class="results-grid">
+                        <div class="result-card calories">
+                            <div class="icon"><i class="fas fa-fire"></i></div>
+                            <div class="result-value" id="caloriesValue">0</div>
+                            <div class="result-label">Calories</div>
+                        </div>
+                        <div class="result-card protein">
+                            <div class="icon"><i class="fas fa-dumbbell"></i></div>
+                            <div class="result-value" id="proteinValue">0g</div>
+                            <div class="result-label">Protein</div>
+                        </div>
+                        <div class="result-card carbs">
+                            <div class="icon"><i class="fas fa-bread-slice"></i></div>
+                            <div class="result-value" id="carbsValue">0g</div>
+                            <div class="result-label">Carbs</div>
+                        </div>
+                        <div class="result-card fat">
+                            <div class="icon"><i class="fas fa-oil-can"></i></div>
+                            <div class="result-value" id="fatValue">0g</div>
+                            <div class="result-label">Fat</div>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Nutrition Breakdown -->
+                    <div class="nutrition-breakdown">
+                        <div class="breakdown-header">
+                            <i class="fas fa-chart-pie"></i>
+                            <h4>Detailed Nutrition Breakdown</h4>
+                        </div>
+                        <div id="analysisNotes" class="mb-20" style="color: var(--text); line-height: 1.7;"></div>
+                        
+                        <div class="micronutrients" id="micronutrientsContainer">
+                            <!-- Micronutrients will be populated here -->
+                        </div>
+
+                        <!-- Calorie Meter -->
+                        <div class="calorie-meter">
+                            <div class="meter-label">
+                                <span>Daily Calorie Goal Progress</span>
+                                <span id="calorieProgress">0%</span>
+                            </div>
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="calorieMeter"></div>
+                            </div>
+                            <div class="meter-stats">
+                                <span id="consumedCalories">0 consumed</span>
+                                <span id="remainingCalories">2000 remaining</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Health Tips -->
+                    <div class="health-tips">
+                        <div class="tips-header">
+                            <i class="fas fa-heart"></i>
+                            <h4>Health Tips & Recommendations</h4>
+                        </div>
+                        <div id="healthTipsContainer">
+                            <!-- Tips will be populated here -->
+                        </div>
+                    </div>
+
+                    <!-- CTA Section -->
+                    <div class="cta-section">
+                        <h4>Ready to Track Your Progress?</h4>
+                        <p>Sign up to save this analysis, track your daily intake, and reach your health goals faster.</p>
+                        <a href="{{ url_for('register') }}" class="btn btn-primary" style="padding: 15px 40px;">
+                            <i class="fas fa-user-plus"></i> Sign Up Free
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section id="pricing" class="pricing-section">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <span class="badge">Simple Pricing</span>
+                <h2>Choose Your Plan</h2>
+                <p>Start with our free plan. Upgrade anytime for unlimited access and advanced analytics.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <!-- Free Plan -->
+                <div class="pricing-card" data-aos="fade-up" data-aos-delay="0">
+                    <h3 class="plan-name">Starter</h3>
+                    <p class="plan-desc">Perfect for casual tracking and testing the waters.</p>
+                    <div class="price">$0<span></span></div>
+                    
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Basic Calorie Tracking</li>
+                        <li class="disabled"><i class="fas fa-times"></i> Micronutrient Analysis</li>
+                        <li class="disabled"><i class="fas fa-times"></i> Data Export</li>
+                    </ul>
+                    <button class="btn-price secondary" onclick="window.location.href='#demo'">Get Started</button>
+                </div>
+
+                <!-- Pro Plan -->
+                <div class="pricing-card popular" data-aos="fade-up" data-aos-delay="100">
+                    <div class="popular-badge">MOST POPULAR</div>
+                    <h3 class="plan-name">Pro</h3>
+                    <p class="plan-desc">For fitness enthusiasts who want detailed insights.</p>
+                    <div class="price">$99<span>/Annual</span></div>
+                    
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> <strong>Unlimited</strong> AI Scans</li>
+                        <li><i class="fas fa-check"></i> Full Macro & Micro Breakdown</li>
+                        <li><i class="fas fa-check"></i> Unlimited History</li>
+                        <li><i class="fas fa-check"></i> CSV Export</li>
+                    </ul>
+                    <a class="btn-price primary" style="text-align: center; text-decoration: none;" href="/login">UpGrade now</a>
+                </div>
+
+                <!-- Coach Plan -->
+                <div class="pricing-card" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="plan-name">Coach</h3>
+                    <p class="plan-desc">For dietitians and trainers managing clients.</p>
+                    <div class="price">$49<span>/month</span></div>
+                    
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Manage up to 15 Clients</li>
+                        <li><i class="fas fa-check"></i> Client Progress Dashboard</li>
+                        <li><i class="fas fa-check"></i> Assign Meal Plans</li>
+                        <li><i class="fas fa-check"></i> White-label Reports</li>
+                        <li><i class="fas fa-check"></i> Priority API Support</li>
+                    </ul>
+                    <button class="btn-price secondary">Comeing Soon</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section id="reviews" class="testimonials">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Loved by Thousands</h2>
+            </div>
+            <div class="testimonial-grid">
+                <div class="review-card" data-aos="fade-up" data-aos-delay="0">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"Burnex AI completely changed how I track meals. I used to hate typing everything in. Now I just snap a pic and I'm done."</p>
+                    <div class="user-profile">
+                        <div class="avatar" style="background: url('https://randomuser.me/api/portraits/women/44.jpg') center/cover;"></div>
+                        <div>
+                            <h4>Sarah Jenkins</h4>
+                            <p style="font-size:0.8rem; color:#999;">Fitness Enthusiast</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p>"The micronutrient breakdown is surprisingly accurate. It helps me monitor my sodium intake which is crucial for my health."</p>
+                    <div class="user-profile">
+                         <div class="avatar" style="background: url('https://randomuser.me/api/portraits/men/32.jpg') center/cover;"></div>
+                        <div>
+                            <h4>Michael Ross</h4>
+                            <p style="font-size:0.8rem; color:#999;">Bodybuilder</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="review-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div>
+                    <p>"As a nutritionist, I recommend this to clients who struggle with portion estimation. The visual feedback is excellent."</p>
+                    <div class="user-profile">
+                         <div class="avatar" style="background: url('https://randomuser.me/api/portraits/women/68.jpg') center/cover;"></div>
+                        <div>
+                            <h4>Dr. Emily Chen</h4>
+                            <p style="font-size:0.8rem; color:#999;">Dietitian</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" style="padding: 100px 0; background: #fff;">
+        <div class="container">
+            <div class="section-header" data-aos="fade-up">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+            <div style="max-width: 800px; margin: 0 auto; display: grid; gap: 20px;">
+                <div class="review-card" style="padding: 20px;" data-aos="fade-up" data-aos-delay="0">
+                    <h4 style="margin-bottom: 10px;">Is the data accurate?</h4>
+                    <p style="color: var(--text-muted);">Our AI is trained on over 1 million food images and verified against USDA databases, achieving 98% accuracy on common meals.</p>
+                </div>
+                <div class="review-card" style="padding: 20px;" data-aos="fade-up" data-aos-delay="100">
+                    <h4 style="margin-bottom: 10px;">Can it detect mixed foods?</h4>
+                    <p style="color: var(--text-muted);">Yes! The model segments the image to identify multiple components (e.g., steak, salad, and fries) separately.</p>
+                </div>
+                 <div class="review-card" style="padding: 20px;" data-aos="fade-up" data-aos-delay="200">
+                    <h4 style="margin-bottom: 10px;">Is my data private?</h4>
+                    <p style="color: var(--text-muted);">Absolutely. We use bank-level encryption and do not sell your personal food logs to third-party advertisers.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <a href="#" class="footer-logo"><i class="fas fa-leaf"></i> Burnex AI</a>
+                    <p class="footer-desc" style="text-align: justify;">Empowering healthier lives through cutting-edge computer vision and nutritional science.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <div class="footer-links">
+                        <a href="#">Features</a>
+                        <a href="#">Pricing</a>
+                        <a href="#">API Access</a>
+                        <a href="#">Integrations</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <div class="footer-links">
+                        <a href="#">About Us</a>
+                        <a href="#">Careers</a>
+                        <a href="#">Blog</a>
+                        <a href="#">Contact</a>
+                    </div>
+                </div>
+                <div class="footer-col">
+                    <h4>Legal</h4>
+                    <div class="footer-links">
+                        <a href="#">Privacy Policy</a>
+                        <a href="#">Terms of Service</a>
+                        <a href="#">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+          <div class="copyright">
+    &copy; <script>document.write(new Date().getFullYear())</script> 
+    Burnex AI. All rights reserved. Developed by Zack Snyder & Team ❤
+</div>
+
+        </div>
+    </footer>
+
+    <!-- AOS Animation Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS animations
+        AOS.init({
+            duration: 800,
+            once: true,
+            offset: 100
+        });
+
+        // Mobile menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+            const menuOverlay = document.getElementById('menuOverlay');
+            
+            // Toggle menu on button click
+            menuToggle.addEventListener('click', function() {
+                menuToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+                document.body.style.overflow = navLinks.classList.contains('active') ? 'hidden' : '';
+            });
+            
+            // Close menu when clicking overlay
+            menuOverlay.addEventListener('click', function() {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            // Close menu when clicking a link (for mobile)
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth <= 768) {
+                        menuToggle.classList.remove('active');
+                        navLinks.classList.remove('active');
+                        menuOverlay.classList.remove('active');
+                        document.body.style.overflow = '';
+                    }
+                });
+            });
+            
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+            
+            // Prevent scrolling when menu is open
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && navLinks.classList.contains('active')) {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+
+        // Demo Form Handling
+        function showPreview(input) {
+            if(input.files && input.files[0]) {
+                const fileName = input.files[0].name;
+                const dropArea = document.getElementById('dropArea');
+                dropArea.innerHTML = `
+                    <i class="fas fa-check-circle" style="color: var(--primary);"></i><br>
+                    <span id="fileText">${fileName}</span>
+                    <div style="font-size: 0.9rem; color: var(--primary); margin-top: 10px;">
+                        Ready to analyze!
+                    </div>
+                `;
+                dropArea.style.borderColor = 'var(--primary)';
+                dropArea.style.backgroundColor = 'var(--primary-light)';
+            }
+        }
+
+        // Simulate loading steps
+        function simulateLoading() {
+            const steps = document.querySelectorAll('.loading-step');
+            let currentStep = 0;
+            
+            const interval = setInterval(() => {
+                if (currentStep > 0) {
+                    steps[currentStep - 1].classList.remove('active');
+                }
+                
+                if (currentStep < steps.length) {
+                    steps[currentStep].classList.add('active');
+                    currentStep++;
+                } else {
+                    clearInterval(interval);
+                }
+            }, 800);
+        }
+
+        // Generate health tips based on analysis
+        function generateHealthTips(nutrients) {
+            const tips = [];
+            
+            // Protein tips
+            if (nutrients.protein_g < 20) {
+                tips.push("Consider adding more protein to your meal for better muscle recovery and satiety.");
+            } else if (nutrients.protein_g > 50) {
+                tips.push("Excellent protein content! Great for muscle building and repair.");
+            }
+            
+            // Carb tips
+            if (nutrients.carbs_g < 30) {
+                tips.push("Your meal is relatively low in carbs, which can be good for weight management.");
+            } else if (nutrients.carbs_g > 100) {
+                tips.push("This meal is high in carbohydrates. Consider balancing with more protein and healthy fats.");
+            }
+            
+            // Fat tips
+            if (nutrients.fat_g < 10) {
+                tips.push("Low fat content - consider adding healthy fats like avocado or nuts.");
+            } else if (nutrients.fat_g > 30) {
+                tips.push("High fat content detected. Balance with fiber-rich foods.");
+            }
+            
+            // General tips
+            tips.push("Drink plenty of water with your meal for optimal digestion.");
+            tips.push("Consider pairing this meal with a side of leafy greens for added nutrients.");
+            tips.push("Wait 20 minutes before considering seconds to allow your brain to register fullness.");
+            
+            return tips.slice(0, 3); // Return first 3 tips
+        }
+
+        // Format nutrient values
+        function formatNutrientValue(value, unit) {
+            return `${value}${unit}`;
+        }
+
+        // Populate results
+        function populateResults(data) {
+            // Update main metrics
+            document.getElementById('caloriesValue').textContent = data.total_calories;
+            document.getElementById('proteinValue').textContent = formatNutrientValue(data.total_nutrients.protein_g, 'g');
+            document.getElementById('carbsValue').textContent = formatNutrientValue(data.total_nutrients.carbs_g, 'g');
+            document.getElementById('fatValue').textContent = formatNutrientValue(data.total_nutrients.fat_g, 'g');
+            
+            // Update analysis notes
+            document.getElementById('analysisNotes').textContent = data.analysis_notes || "Your meal has been analyzed successfully.";
+            
+            // Update micronutrients
+            const micronutrientsContainer = document.getElementById('micronutrientsContainer');
+            const nutrients = data.total_nutrients;
+            
+            const micronutrients = [
+                { name: 'Fiber', value: nutrients.fiber_g || 0, unit: 'g' },
+                { name: 'Sugar', value: nutrients.sugar_g || 0, unit: 'g' },
+                { name: 'Sodium', value: nutrients.sodium_mg || 0, unit: 'mg' },
+                { name: 'Cholesterol', value: nutrients.cholesterol_mg || 0, unit: 'mg' }
+            ];
+            
+            let micronutrientsHTML = '';
+            micronutrients.forEach(nutrient => {
+                micronutrientsHTML += `
+                    <div class="micronutrient-item">
+                        <span class="micronutrient-name">${nutrient.name}</span>
+                        <span class="micronutrient-value">${nutrient.value}${nutrient.unit}</span>
+                    </div>
+                `;
+            });
+            micronutrientsContainer.innerHTML = micronutrientsHTML;
+            
+            // Update calorie meter
+            const dailyGoal = 2000; // Standard daily calorie goal
+            const percentage = Math.min(Math.round((data.total_calories / dailyGoal) * 100), 100);
+            
+            document.getElementById('calorieProgress').textContent = `${percentage}%`;
+            document.getElementById('calorieMeter').style.width = `${percentage}%`;
+            document.getElementById('consumedCalories').textContent = `${data.total_calories} consumed`;
+            document.getElementById('remainingCalories').textContent = `${Math.max(dailyGoal - data.total_calories, 0)} remaining`;
+            
+            // Generate and display health tips
+            const tips = generateHealthTips(data.total_nutrients);
+            const tipsContainer = document.getElementById('healthTipsContainer');
+            
+            let tipsHTML = '';
+            tips.forEach(tip => {
+                tipsHTML += `
+                    <div class="tip-item">
+                        <i class="fas fa-lightbulb"></i>
+                        <div class="tip-text">${tip}</div>
+                    </div>
+                `;
+            });
+            tipsContainer.innerHTML = tipsHTML;
+        }
+
+        // Form submission
+        document.getElementById('demoForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const file = document.getElementById('demoFile').files[0];
+            if(!file) {
+                alert("Please select an image first");
+                return;
+            }
+
+            // Show loading, hide upload and results
+            document.getElementById('uploadSection').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'none';
+            document.getElementById('loadingContainer').style.display = 'block';
+            
+            // Start loading animation
+            simulateLoading();
+
+            const formData = new FormData();
+            formData.append('food_image', file);
+
+            try {
+                // Call the demo endpoint
+                const res = await fetch('/demo_analyze', { method: 'POST', body: formData });
+                const data = await res.json();
+                
+                // Hide loading
+                document.getElementById('loadingContainer').style.display = 'none';
+                
+                if(data.error) {
+                    alert("Analysis Failed: " + data.error);
+                    document.getElementById('uploadSection').style.display = 'block';
+                } else {
+                    // Populate and show results
+                    populateResults(data);
+                    document.getElementById('resultsContainer').style.display = 'block';
+                    
+                    // Scroll to results
+                    document.getElementById('resultsContainer').scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            } catch(e) {
+                document.getElementById('loadingContainer').style.display = 'none';
+                document.getElementById('uploadSection').style.display = 'block';
+                alert("Server error. Please try again.");
+                console.error('Error:', e);
+            }
+        });
+
+        // Reset form on page refresh
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted || performance.getEntriesByType("navigation")[0].type === 'back_forward') {
+                document.getElementById('demoForm').reset();
+                document.getElementById('uploadSection').style.display = 'block';
+                document.getElementById('loadingContainer').style.display = 'none';
+                document.getElementById('resultsContainer').style.display = 'none';
+                
+                const dropArea = document.getElementById('dropArea');
+                dropArea.innerHTML = `
+                    <i class="fas fa-cloud-upload-alt"></i><br>
+                    <span id="fileText">Tap to Upload Food Image</span>
+                    <div style="font-size: 0.9rem; color: var(--text-light); margin-top: 10px;">
+                        Supports JPG, PNG, WEBP
+                    </div>
+                `;
+                dropArea.style.borderColor = '#cbd5e1';
+                dropArea.style.backgroundColor = 'var(--bg-dark)';
+            }
+        });
+    </script>
+</body>
+</html>

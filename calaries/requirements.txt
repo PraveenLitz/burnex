@@ -1,0 +1,13 @@
+Flask
+openai
+python-dotenv
+Pillow
+requests
+google-genai
+google.generativeai
+flask-sqlalchemy 
+flask-login 
+razorpay 
+google-generativeai 
+pymysql 
+cryptography
